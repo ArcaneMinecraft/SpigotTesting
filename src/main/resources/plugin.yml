@@ -1,18 +1,17 @@
 name: SpigotTesting
 version: ${project.version}
-authors: [SimonOrJ]
+authors: [Agentred100, jugglingman456, SimonOrJ]
 description: Arcane Testing Plugin with Spigot
 main: com.arcaneminecraft.testing.SpigotTesting
 website: https://arcaneminecraft.com/
 
 commands:
-  christmas:
-    aliases: [present]
-    description: Merry Christmas! A free shulker box with an elytra in it!
-  nbt:
-    description: test command to check nbt data.
+  f:
+    description: Fireworks (Arcane's first anniversity command)
+  doge:
+    description: Doge command
 
 permissions:
-  arcane.christmas:
-    description: The christmas event!
-    default: false
+  arcane.f:
+    description: fireworks
+    default: op
