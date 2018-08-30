@@ -8,10 +8,7 @@ website: https://arcaneminecraft.com/
 commands:
   f:
     description: Fireworks (Arcane's first anniversity command)
-  doge:
-    description: Doge command
+  entitiesnear:
+    description: Checks nearby entities
+    usage: /entitiesnear <radius> [-all|player ...]
 
-permissions:
-  arcane.f:
-    description: fireworks
-    default: op
