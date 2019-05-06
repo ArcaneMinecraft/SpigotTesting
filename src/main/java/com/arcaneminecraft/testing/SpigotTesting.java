@@ -7,31 +7,42 @@ import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.*;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.Collection;
 import java.util.List;
 
 public class SpigotTesting extends JavaPlugin {
+	private static SpigotTesting instance;
 	
 	@Override
 	public void onEnable() {
-		
+		instance = this;
+		getServer().getPluginManager().registerEvents(new JoinFireworks(), this);
 	}
 	
 	@Override
 	public void onDisable() {
+		instance = null;
 	}
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		if (cmd.getName().equalsIgnoreCase("f") & sender.hasPermission("arcane.f")) {
+		if (cmd.getName().equalsIgnoreCase("f")) {
+			if (!sender.hasPermission("arcane.f")) {
+				sender.sendMessage("No Permission :(");
+				return true;
+			}
 			if (sender instanceof Player)
-				return firework((Player) sender);
+				firework((Player) sender);
 			else
 				sender.sendMessage("Must be run as a player");
-				return true;
+			return true;
 		}
 
 		if (cmd.getName().equalsIgnoreCase("entitiesnear")) {
@@ -40,23 +51,84 @@ public class SpigotTesting extends JavaPlugin {
 		return false;
 	}
 
-	private boolean firework(Player p1) {
-		Firework fw = p1.getWorld().spawn(p1.getLocation(), Firework.class);
-		FireworkEffect effect = FireworkEffect.builder().trail(true).flicker(false).withColor(Color.RED)
-				.with(FireworkEffect.Type.BURST).build();
-		FireworkMeta fwm = fw.getFireworkMeta();
-		fwm.clearEffects();
-		fwm.addEffects(effect);
+	public class JoinFireworks implements Listener {
 
-		try {
-			fwm.getClass().getDeclaredField("power");
-		} catch (NoSuchFieldException e) {
-			e.printStackTrace();
+		@EventHandler
+		public void onJoinFirework(PlayerJoinEvent e) {
+			if (e.getPlayer().hasPermission("arcane.f")) {
+				getServer().getScheduler().runTaskLater(instance, () -> {
+					firework(e.getPlayer());
+				}, 30);
 
+			}
 		}
+	}
 
-		fw.setFireworkMeta(fwm);
-		return true;
+	private BukkitTask task = null;
+	private void firework(Player p) {
+		int temp;
+		if (task != null) {
+			task.cancel();
+			temp = 0;
+		} else {
+			temp = p.getNoDamageTicks();
+		}
+		p.setNoDamageTicks(Integer.MAX_VALUE);
+		task = getServer().getScheduler().runTaskLater(instance, () -> p.setNoDamageTicks(temp), 100);
+
+		Firework fw1 = p.getWorld().spawn(p.getLocation(), Firework.class);
+		FireworkMeta fm1 = fw1.getFireworkMeta();
+		fm1.setPower(5);
+		fw1.setFireworkMeta(fm1);
+
+		getServer().getScheduler().runTaskLater(this, () -> {
+			Firework fw = p.getWorld().spawn(p.getLocation(), Firework.class);
+			FireworkMeta fmm = fw.getFireworkMeta();
+			fmm.addEffect(FireworkEffect.builder()
+					.trail(true)
+					.flicker(false)
+					.withColor(Color.RED)
+					.with(FireworkEffect.Type.STAR)
+					.build());
+			fmm.setPower(1);
+			fw.setFireworkMeta(fmm);
+		}, 4);
+		getServer().getScheduler().runTaskLater(this, () -> {
+			Firework fw = p.getWorld().spawn(p.getLocation(), Firework.class);
+			FireworkMeta fmm = fw.getFireworkMeta();
+			fmm.addEffects(FireworkEffect.builder()
+					.trail(true)
+					.flicker(false)
+					.withColor(Color.YELLOW)
+					.with(FireworkEffect.Type.BALL_LARGE)
+					.build()
+					,FireworkEffect.builder()
+					.trail(true)
+					.flicker(false)
+					.withColor(Color.ORANGE)
+					.with(FireworkEffect.Type.BALL)
+					.build());
+			fmm.setPower(3);
+			fw.setFireworkMeta(fmm);
+		}, 8);
+		getServer().getScheduler().runTaskLater(this, () -> {
+			Firework fw = p.getWorld().spawn(p.getLocation(), Firework.class);
+			FireworkMeta fmm = fw.getFireworkMeta();
+			fmm.addEffect(FireworkEffect.builder()
+					.trail(true)
+					.flicker(true)
+					.withColor(Color.RED)
+					.with(FireworkEffect.Type.BALL)
+					.build());
+			fmm.setPower(1);
+			fw.setFireworkMeta(fmm);
+		}, 12);
+		getServer().getScheduler().runTaskLater(this, () -> {
+			Firework fw = p.getWorld().spawn(p.getLocation(), Firework.class);
+			FireworkMeta fmm = fw.getFireworkMeta();
+			fmm.setPower(3);
+			fw.setFireworkMeta(fmm);
+		}, 16);
 	}
 
 	private boolean entitiesNear(CommandSender sender, String[] args) {

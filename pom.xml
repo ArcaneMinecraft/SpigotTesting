@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.arcaneminecraft</groupId>
   <artifactId>SpigotTesting</artifactId>
-  <version>0.0.2-SNAPSHOT</version>
+  <version>0.0.3-SNAPSHOT</version>
   <name>SpigotTesting</name>
   <description>Code Testing Plugin</description>
   <repositories>
@@ -16,14 +16,14 @@
     <dependency>
       <groupId>org.spigotmc</groupId>
       <artifactId>spigot-api</artifactId>
-      <version>1.13-R0.1-SNAPSHOT</version>
+      <version>1.13.2-R0.1-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
     <!--Bukkit API-->
     <dependency>
       <groupId>org.bukkit</groupId>
       <artifactId>bukkit</artifactId>
-      <version>1.13-R0.1-SNAPSHOT</version>
+      <version>1.13.2-R0.1-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
   </dependencies>

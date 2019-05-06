@@ -8,7 +8,12 @@ website: https://arcaneminecraft.com/
 commands:
   f:
     description: Fireworks (Arcane's first anniversity command)
+    permission: arcane.f
   entitiesnear:
     description: Checks nearby entities
     usage: /entitiesnear <radius> [-all|player ...]
 
+permissions:
+  arcane.f:
+    description: Arcane Anniversary Fireworks
+    default: false
